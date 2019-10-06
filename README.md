@@ -16,7 +16,7 @@ Colocated with ProbGen 2019 in Aussois, France. [Website](https://probgen2019.sc
 ## <a name="welcome"></a> Welcome by Jerome
 [[top](#top)]
 
-## <a name="kern"></a> Andrew Kern, State of PopSim (1 hour 15 mins)
+## <a name="kern"></a> Andrew "Andy" Kern, State of PopSim (1 hour 15 mins)
 [[top](#top)]
 
 Intro
@@ -41,22 +41,22 @@ PopSim Project
     + Sanity check models (constant size)
 - Reproducible analysis workflows
 - Richard Durbin comment: MSMC is out-of-date, should use MSMC2
-    + Andrew: sticking to published methods. There's also SMCSMC by Chris Cole
+    + Andy: sticking to published methods. There's also SMCSMC by Chris Cole
     + Richard: MSMC2 been on bioRxiv for 6 months
-    + Andrew: everyone guilty of making their own method look good
+    + Andy: everyone guilty of making their own method look good
 - Adam Siepel comment: maybe include a set of guidelines for publication, we as reviewers can refer to them
 - Richard Durbin comment: standardized input format, so people don't need to wrangle the data to do different evaluation
-    + Andrew: great idea. Also missing data, masked data
+    + Andy: great idea. Also missing data, masked data
     + Jerome: that's 90% of what's in stdpopsim
 
 Results
 - Constant population size
-- Human genome (Gutenkunst et al. 2009, Ragsdale and Gravel 2019): YRI, CEU, CHB. Andrew claims that YRI is harder than the others
-    + Jeffrey Spence comment: that's a visual effect, YRI only varies by a factor of 10^2, the others vary by a lot more. Andrew: yes
-    + Andrew: methods seem to be doing well.
+- Human genome (Gutenkunst et al. 2009, Ragsdale and Gravel 2019): YRI, CEU, CHB. Andy claims that YRI is harder than the others
+    + Jeffrey Spence comment: that's a visual effect, YRI only varies by a factor of 10^2, the others vary by a lot more. Andy: yes
+    + Andy: methods seem to be doing well.
 - Masking low-recombination regions seem to be crucial to analysis? Chromosome 20 (?) low-recombining, 1/3 of the whole chromosome. 1000 Genomes does not include data for these regions. Repeats, transposable elements, recombination rate
     + Richard Durbin disagrees, should think of them as unresequenced regions
-    + Andrew: but there's a very strong correlation
+    + Andy: but there's a very strong correlation
     + Adam: we should think of these as areas we can't map?
 - Drosophila
     + Sheehan and Song (2015) model. Methods do better or worse.
@@ -73,25 +73,25 @@ What next?
 - What are the benchmarks that people use?
 - Against what would you want to calculate MSE?
 - Ariella Gladstein comment: what about multiparameter inference? Does getting everything matter, or just something like population size?
-    - Andrew: don't want to alienate any approaches / choices at the beginning
+    - Andy: don't want to alienate any approaches / choices at the beginning
 - We're using the right mutation rate, generation time. Not misspecified.
 - Konrad Lohse comment: what about identifiability of models? Could you get a model pretty different from truth that predicts the data equally well?
     + Simon Myers: good question, somewhat unidentifiable, at least from site frequency spectrum
 - Richard Durbin comment: actually the thing you can measure is the coalescence rate. We invert that into other parameters. There's an argument that we should be more explicit about the rate itself instead of N (population size)
-    + Andrew: in current simulations, Ne really is coalescence rate
+    + Andy: in current simulations, Ne really is coalescence rate
 - Peter Ralph: what else would be useful to do?
 - Jerome: simulation paradigms, how to engage others?
     + Noah Dukler: did stuff with models, people can submit models using a PR, one of us then reproduces from your paper and does a QC. Note: many times we've learned things from contacting the authors that weren't clear from the paper.
-    + Andrew: lot of good QC discussions that ensue over GitHub
+    + Andy: lot of good QC discussions that ensue over GitHub
 - Ariella question: what does it mean for two models to be equal / how is that checked?
     + Jerome: we have a pretty hashed out definition in msprime, compares underlying objects within double precision
     + Noah: sometimes you can have two independent events whose order is switched, that needs to be verified by eye
-    + Andrew: we decided not to go with summaries. Instead going with parameters.
+    + Andy: we decided not to go with summaries. Instead going with parameters.
 - Audience question: these standard models use parameters from papers, would you be able to change them? Shouldn’t we make parameter changes transparent to users?
-    + Andrew: uses Python right now so you should be able to edit that
+    + Andy: uses Python right now so you should be able to edit that
 - Audience comment: it could also be a great tool to know what's the best model in my case
     + Jerome: don't want to bloat the codebase, keeping it focused to simulations
-- Andrew: we should anticipate the need to change assemblies. Currently only assembly 37
+- Andy: we should anticipate the need to change assemblies. Currently only assembly 37
 
 Initial manuscript
 - Whitepaper, small publication that introduces the framework / resources. Open if anyone wants to be more involved
@@ -132,7 +132,7 @@ Spatial structure
     - Daniel Falush: plot the residuals
         - Richard: F4 stats are one type of diagnostic
         - Simon: linkage disequilibrium
-        - Andrew: F4 is just a transformation of the joint site frequency spectrum, which is the original input to momi
+        - Andy: F4 is just a transformation of the joint site frequency spectrum, which is the original input to momi
         - Guy Sella: suppose a demon gave you the true ARG, what would you consider a good demographic model for that?
     - Konrad: never understood what we can learn from the block bootstrap
         - Richard: I actually think they're different things. Let's say you had two datasets from the same situation, you'd get different results. Bootstrap gives you an estimate of that variance
@@ -141,7 +141,7 @@ Spatial structure
         - Konrad: but the data is all from one tree
         - Richard: want to push us to think about simulating from a richer model space. What sort of bias do we see? Do we know how well we're fitting?
     - Simon: what bits of the genome do we need? Should the population tree be the same for different parts of the genome?
-    - Andrew: can investigate how much variation we'll see in different parts of the tree under a neutral model
+    - Andy: can investigate how much variation we'll see in different parts of the tree under a neutral model
 
 Gene conversion
 - Slide has Palamara et al. 2015, Narasimhan et al. 2017
@@ -154,7 +154,7 @@ Gene conversion
 - So why do our things work?
     + I'd like msprime to simulate gene conversion
     + This doesn't affect site frequency spectrum-based methods, but it does affect LD structure
-    + Andrew: ... unless there's bias
+    + Andy: ... unless there's bias
     + Richard: selection around sites. Gene conversion is more common around recombination hotspots. I've always thought we should mask out the kilobase around recombination hotspots.
     + Pier: yes, it is correlated to recombination
 - Richard: PSMC overestimates recent population size in the presence of gene conversion (but not sure about the exact details, masters project)
@@ -178,10 +178,10 @@ Intro
         * Further dev benchmarking
         * Challenges (DREAM)
         * Standardization of input
-    + Andrew: How do we get funding? In the absence of funding, how do we get devlopers?
+    + Andy: How do we get funding? In the absence of funding, how do we get devlopers?
         * Jerome: developers is what we need
     + Georgia Tsambos: we can convert from SLiM, but it sounds like your model checking process depends on things that happen in msprime
-        * Andrew, Andy: we should be agnostic to simulator?
+        * Andy, Andy: we should be agnostic to simulator?
     + Ariella Gladstein: propose that developers have to submit a Docker image
     + Jedidiah Carlson: how do we plan on publishing these extensions? Another big paper, or multiple small individual contributions?
 - Extensions
@@ -269,7 +269,7 @@ What are ARGs or trees NOT good for?
 - De novo mutations, mosaicism
 - GWAS discovery?
     + Adam Siepel: helps you figure out which tests to do
-    + Andrew Kern: additional power
+    + Andy Kern: additional power
 - Fine-mapping (?), beyond the question of annotating variants
 
 ARG-based statistics
@@ -418,8 +418,8 @@ Tree-based statistics
 ## <a name="discussion"></a> General discussion / summary and agreed actions
 [[top](#top)]
 
-Andrew Kern: does anyone have sources of funding?
-- RCM: wasn't going to fund our international collaborators (Andrew)
+Andy Kern: does anyone have sources of funding?
+- RCM: wasn't going to fund our international collaborators (Andy)
 - Flora: Paris-Saclay has a Center for Data Science. They provide training and hold challenges, this generates money which then supports engineers.
 - Sohini: for the people who have been most involved, what would you want to use the money for? Getting together for a month, a DREAM-like hackathon, or getting a programmer. NSF DBI
 - CZI: fundamental open source for science
@@ -428,14 +428,14 @@ Andrew Kern: does anyone have sources of funding?
 - Flora: training network
 - Audience member: this is also useful for reviewers, funding agencies, to evaluate the merit of proposals
 - Ariella: training workshops to help push this out as something people use
-- Andrew volunteered to help work on the grant
+- Andy volunteered to help work on the grant
 
 DREAM
 - Adam: It's an organized set of competitions where people submit... Some are automatically evaluated, some are manual. Ryan [who?] was taking the lead on that
 - Protein structure, regulatory, systems biology
 - Fields where the problem is relatively well-defined, that's why we decided to wait
 - We would need to have a pretty clear idea which actual tasks we would want to test
-- Andrew Kern: concerned about rushing in because it would behoove us to focus on the cooperation aspect of things before jumping into competing teams
+- Andy Kern: concerned about rushing in because it would behoove us to focus on the cooperation aspect of things before jumping into competing teams
 
 Hackathon
 - Jerome: this is something for which an extended hackathon would work pretty well
@@ -448,7 +448,7 @@ Methods / Wishlist
 - Someone to take the point on SLiM implementation. Peter Ralph, Georgia Tsambos, Graham
 - Mutation models: Jed Carlson, Noah
 - Gene conversion: Franz and Andy
-- Error: Aaron, Leo, Wilder, Arille
+- Error: Aaron, Leo, Wilder, Ariella
     + Phasing errors
     + Read coverage
     + Ancient DNA
