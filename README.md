@@ -11,8 +11,7 @@ Colocated with ProbGen 2019 in Aussois, France. [Website](https://probgen2019.sc
 * [Jerome Kelleher, ARG formats and software](#kelleher)
 * [Yan Wong, ARG metrics](#wong)
 * [Peter Ralph, Benchmark simulations for ARG inference](#ralph)
-* [General discussion](#discussion)
-* [Summary and agreed actions](#summary)
+* [General discussion + summary and agreed actions](#discussion)
 
 ## <a name="welcome"></a> Welcome by Jerome
 [[top](#top)]
@@ -73,7 +72,7 @@ Results
 What next?
 - What are the benchmarks that people use?
 - Against what would you want to calculate MSE?
-- Arielle Gladstein comment: what about multiparameter inference? Does getting everything matter, or just something like population size?
+- Ariella Gladstein comment: what about multiparameter inference? Does getting everything matter, or just something like population size?
     - Andrew: don't want to alienate any approaches / choices at the beginning
 - We're using the right mutation rate, generation time. Not misspecified.
 - Konrad Lohse comment: what about identifiability of models? Could you get a model pretty different from truth that predicts the data equally well?
@@ -84,7 +83,7 @@ What next?
 - Jerome: simulation paradigms, how to engage others?
     + Noah Dukler: did stuff with models, people can submit models using a PR, one of us then reproduces from your paper and does a QC. Note: many times we've learned things from contacting the authors that weren't clear from the paper.
     + Andrew: lot of good QC discussions that ensue over GitHub
-- Arielle question: what does it mean for two models to be equal / how is that checked?
+- Ariella question: what does it mean for two models to be equal / how is that checked?
     + Jerome: we have a pretty hashed out definition in msprime, compares underlying objects within double precision
     + Noah: sometimes you can have two independent events whose order is switched, that needs to be verified by eye
     + Andrew: we decided not to go with summaries. Instead going with parameters.
@@ -98,9 +97,14 @@ Initial manuscript
 - Whitepaper, small publication that introduces the framework / resources. Open if anyone wants to be more involved
 - Adam: we're avoiding it to be a benchmarking paper, more about introducing a resource. Forward-looking, discussion here today can be captured in the paper
 
-Jerome demoed the CLI
-- `tskit info temp.trees`
-- `tskit provenance`
+Jerome demoed the CLI. Peter Ralph [live-tweeted with photos](https://twitter.com/petrelharp/status/1180765036521893888).
+- `stdpopsim -vv homsap -c chr22 -l 0.01 10 tmp.trees`
+- `stdpopsim -vv homsap -c chr22 -g HapmapII_GRCh37 10 tmp.trees`
+- `tskit info tmp.trees`
+- `tskit provenances tmp.trees | tail -n 1 | cut -f 3 | jq .`
+- `stdpopsim homsap --help-models`
+- `stdpopsim homsap -m ooa_3 -l 0.01 10 5 2 tmp.trees`
+- `tskit vcf tmp.trees | head -n 10`
 
 ## <a name="durbin"></a> Richard Durbin, Model misspecification (30 mins)
 [[top](#top)]
@@ -125,7 +129,7 @@ Spatial structure
     + Richard response: regularization process may encourage the true result
 - Discussion
     - Adam: the model could fit the data badly, and you could still give low variance when using the non-parametric bootstrap
-    - Audience member (DF, Bath?): plot the residuals
+    - Daniel Falush: plot the residuals
         - Richard: F4 stats are one type of diagnostic
         - Simon: linkage disequilibrium
         - Andrew: F4 is just a transformation of the joint site frequency spectrum, which is the original input to momi
@@ -178,7 +182,7 @@ Intro
         * Jerome: developers is what we need
     + Georgia Tsambos: we can convert from SLiM, but it sounds like your model checking process depends on things that happen in msprime
         * Andrew, Andy: we should be agnostic to simulator?
-    + Arielle Goldstein: propose that developers have to submit a Docker image
+    + Ariella Gladstein: propose that developers have to submit a Docker image
     + Jedidiah Carlson: how do we plan on publishing these extensions? Another big paper, or multiple small individual contributions?
 - Extensions
     + Selection
@@ -382,7 +386,7 @@ Discussion part 1
 - Peter Ralph: haplotype-based things. Also correlations between (neighboring?) trees.
     + Yan: huge literature on trying to calculate SPRs from trees
     + Peter: looking at two trees close by and looking at how TMRCA changes
-- Richard Durbin: in my opinion, lots of metrics for distances between trees, but not clear if they're good for what we want to do. Olivier Gascuel (Nature 2018, 556(7702):452-456, "Renewing Felsenstein's phylogenetic bootstrap in the era of big data") gave a talk on this topic. They have a measure of transfer distances
+- Richard Durbin: in my opinion, lots of metrics for distances between trees, but not clear if they're good for what we want to do. Olivier Gascuel (Nature 2018, 556(7702):452-456, "[Renewing Felsenstein's phylogenetic bootstrap in the era of big data](https://www.nature.com/articles/s41586-018-0043-0)") gave a talk on this topic. They have a measure of transfer distances
     + Yan: sounds like an SPR?
     + Richard: It's not an SPR
     + Adam Siepel: Robinson-Foulds not good in this setting, some of the internal nodes are not good.
@@ -401,8 +405,61 @@ Discussion questions (not really covered)
 ## <a name="ralph"></a> Peter Ralph, Benchmark simulations for ARG inference (45 mins)
 [[top](#top)]
 
-## <a name="discussion"></a> General discussion
+Intro
+- My task is to lead a discussion on benchmark simulations
+- What are all the ways that reality can mess up our tree sequence inference? We should put that in our simulations
+- What things do we care about?
+- Jerome recently implemented a method in tskit that lets you compute summaries, I could also explain that
+- Email list, http://lists.uoregon.edu/mailman/listinfo/popgen_benchmark
+
+Tree-based statistics
+- Peter gave a chalk talk tutorial
+
+## <a name="discussion"></a> General discussion / summary and agreed actions
 [[top](#top)]
 
-## <a name="summary"></a> Summary and agreed actions
-[[top](#top)]
+Andrew Kern: does anyone have sources of funding?
+- RCM: wasn't going to fund our international collaborators (Andrew)
+- Flora: Paris-Saclay has a Center for Data Science. They provide training and hold challenges, this generates money which then supports engineers.
+- Sohini: for the people who have been most involved, what would you want to use the money for? Getting together for a month, a DREAM-like hackathon, or getting a programmer. NSF DBI
+- CZI: fundamental open source for science
+- Richard: you could write a focused task, and then get someone for one year
+- Richard: in Europe, there are training networks
+- Flora: training network
+- Audience member: this is also useful for reviewers, funding agencies, to evaluate the merit of proposals
+- Ariella: training workshops to help push this out as something people use
+- Andrew volunteered to help work on the grant
+
+DREAM
+- Adam: It's an organized set of competitions where people submit... Some are automatically evaluated, some are manual. Ryan [who?] was taking the lead on that
+- Protein structure, regulatory, systems biology
+- Fields where the problem is relatively well-defined, that's why we decided to wait
+- We would need to have a pretty clear idea which actual tasks we would want to test
+- Andrew Kern: concerned about rushing in because it would behoove us to focus on the cooperation aspect of things before jumping into competing teams
+
+Hackathon
+- Jerome: this is something for which an extended hackathon would work pretty well
+- DIMACS, at Rutgers. E.g. who can implement the best shortest path algorithm
+- Mozilla Hackathon
+- Copernicus Hackathons, run out of Europe. Fund 20 hackathons a year, 20,000 euros
+- Doc-athon! (Peter Ralph)
+
+Methods / Wishlist
+- Someone to take the point on SLiM implementation. Peter Ralph, Georgia Tsambos, Graham
+- Mutation models: Jed Carlson, Noah
+- Gene conversion: Franz and Andy
+- Error: Aaron, Leo, Wilder, Arille
+    + Phasing errors
+    + Read coverage
+    + Ancient DNA
+    + Ancestral state
+    + Ascertainment
+
+Peter Ralph: what about people on the fringes? What's most useful for users?
+- Konrad: we ran a workshop where Georgia and Jerome did most of the training. There are entire parts of popgen that aren't aware of this.
+- Ariella: think about the user experience for submitting a model, removing barriers like GitHub expertise
+- Adam: YouTube tutorial
+- Noah: 99% of use case will be people wanting to use models that are already there
+- Jerome: more important to grow the user base than to grow the developer base
+- Peter: other organisms
+- Reach out to human demography community. Complex spliting joining models
