@@ -1,4 +1,5 @@
-# PopSim 2019
+# PopSim 2019 Workshop
+Colocated with ProbGen 2019 in Aussois, France. [Website](https://probgen2019.sciencesconf.org/resource/page/id/5)
 
 ## <a name="top"></a> Table of Contents
 * [Welcome by Jerome](#welcome)
@@ -14,8 +15,11 @@
 * [Summary and agreed actions](#summary)
 
 ## <a name="welcome"></a> Welcome by Jerome
+[[top](#top)]
 
 ## <a name="kern"></a> Andrew Kern, State of PopSim (1 hour 15 mins)
+[[top](#top)]
+
 Intro
 - Pool et al. 2012, Population genomic samples from African Drosophila melanogaster. WGS, haploid, well-phased
 - stairwayplot, SMC++, MSMC, different methods give different results
@@ -99,6 +103,8 @@ Jerome demoed the CLI
 - `tskit provenance`
 
 ## <a name="durbin"></a> Richard Durbin, Model misspecification (30 mins)
+[[top](#top)]
+
 Intro
 - Saw that the whole program was about ARGs, but that's not representative of PopSim. This is something different.
 - So far we have simulated from a model that is in the space being fit by the methods.
@@ -156,6 +162,8 @@ Gene conversion
 Summary: model misspecification is an issue, and we ought to explore it as a field
 
 ## <a name="siepel"></a> Adam Siepel, What's next for PopSim (45 mins)
+[[top](#top)]
+
 Intro
 - This will be unstructured, no slides
 - Which areas are most important, what resources do we want to add
@@ -170,7 +178,7 @@ Intro
         * Jerome: developers is what we need
     + Georgia Tsambos: we can convert from SLiM, but it sounds like your model checking process depends on things that happen in msprime
         * Andrew, Andy: we should be agnostic to simulator?
-    + Arielle Goldstein propose that developers have to submit a Docker image
+    + Arielle Goldstein: propose that developers have to submit a Docker image
     + Jedidiah Carlson: how do we plan on publishing these extensions? Another big paper, or multiple small individual contributions?
 - Extensions
     + Selection
@@ -196,6 +204,8 @@ Intro
     + Taking a vote: selection (25), spatial (12), mutation models (12), gene conversion (12), overlapping generations (0), sex bias (0), ancient samples (6)
 
 ## <a name="afternoon"></a> Afternoon introduction by Jerome
+[[top](#top)]
+
 PopSim for Trees
 - Two new methods: tsinfer and Relate, plus Harris 2019 commentary, in Nature Genetics
 - We need to think, what infrastucture and methodology do we need to push the field forward?
@@ -205,6 +215,8 @@ PopSim for Trees
 - Let's cooperate on infrastrucutre and compete on methods.
 
 ## <a name="myers"></a> Simon Myers, What's so great about ARGs? (45 mins)
+[[top](#top)]
+
 Overview
 - Some examples of questions we might answer using ARGs
 - Some of my own ideas, hope we get some other ideas
@@ -291,7 +303,7 @@ Overview: nuts and bolts of ARGs
 - Thoughts on community standardisation
 
 What's an ARG?
-- I mean a Griffiths (1991) ARG (going until one grand TMRCA)
+- I mean a Griffiths (1991) ARG (going until one grand MRCA)
 - Representable as a directed acyclic graph
 - ArgML (McGill et al. 2013), GraphML specializations, but died out
 - Extended Newick (Cardona et al. 2008), all sorts of problems
@@ -303,8 +315,88 @@ Tree sequences
 - Think about ancestral haplotypes and events relating these haplotypes
 - We store nodes and edges
 
+Comparison between ARG and tree sequence
+- It's possible to represent the full ARG using a tree sequence. Need to allow unary nodes. Can "simplify" out recombination nodes after this conversion, which removes these unary nodes.
+- Space requirements
+    - Total space to store an ARG with n leaves is O(n + rho*log(n)) (Hudson 1983)
+    - Space to store a tree sequence is O(n + rho*log(n))
+- Time requirements
+    + Consider the option of generating all trees
+    + For a tree sequence, the left-most tree requires O(n) time, and each subsequent tree needs O(1) time
+    + For an ARG, constructing the left-most tree requires O(n + rho*log(n)). For each subsequent tree, need to backtrack through the graph to find the next recombination breakpoint. Complexity is worse.
+    + ARG time requirements cannot be better asymptotically, and the coefficients for tree sequences are very small
+- Library support
+    -  Nothing for ARGs (in the sense of representing the DAG)
+    -  For tree sequences, have tskit!
+
+Tskit overview
+- C library (C99 compiler), Python library, lots of tests, documentation
+- Tskit files are small, and can be further compressed using tszip
+- 10 million samples, 100 Mb --> 1.2 GiB uncompressed, around 10x further compression with tszip. Take around 10 seconds to iterate over the 650K trees in Python
+    - In contrast, storing all the trees in Newick would require 256TiB and would need >5 CPU years to parse
+- 1000 times faster to compute population statistics
+- Tskit used in SLiM and fwdpp. Enables sophisticated combination of forward and backward simulations. Not trivial and only because of this common infrastructure.
+- Jerome has a 7 year fellowship with funding, for which the central goal will be working on tskit. Currently recruiting a software engineer to work full time on tskit ecosystem.
+
+Final thoughts
+- I hope as a community, we can get behind tskit as shared infrastructure
+- Bioinformatics is plagued by fragmentation
+
+Discussion
+- Adam Siepel: visualization? Matthew Rasmussen had a good visualization for ARGweaver, could see selection?
+    + Jerome: current SVG drawer right now
+
 ## <a name="wong"></a> Yan Wong, ARG metrics (45 mins)
 [[top](#top)]
+
+Motivation
+- Comparing ancestral inference methods
+- Kuhner and Yamoto (2015) J. Mol. Evol.
+- Arenas, Valiente, & Posada (2008) Mol. Biol. Evol
+- Test summary statistic accuracy
+- Tree distance metrics on each marginal tree
+- Anything else?
+
+Summary statistics
+- Hotspotter, LDhat, etc. try to infer recombination
+- recom (Griffiths & Marjoram 1996), root TMRCA
+- GARD (Kosakovsky Pond et al 2006), recombination breakpoints
+- Margarita (Minichiello & Durbin 2006), simulated disease association
+- PSMC (Li & Durbin 2008), Ne and changes in Ne
+- ARGweaver, multiple summary statistics
+- We don't know how sensitive these methods are to model misspecification
+
+Tree distance metrics
+- Rooted vs. unrooted
+- Bifurcating vs. multifurcating (polytomies)
+- SPR is NP hard (2005), so we would use some approximation
+
+Alternatives
+- Date individual variants --> no need for pairwise tip comparisons. Scales! (Relate, GEVA, tsdate)
+- Can test order (e.g. via a rank correlation) not just absolute dates
+
+Discussion part 1
+- Adam Siepel: there's a tension in ARG inference between fitting mutation patterns and minimizing the number of recombination events
+    + Yan, Adam: but if you're comparing to the true tree, I guess that wouldn't be a factor
+    + Yan: there's only so much one can localize recombinations
+- Peter Ralph: haplotype-based things. Also correlations between (neighboring?) trees.
+    + Yan: huge literature on trying to calculate SPRs from trees
+    + Peter: looking at two trees close by and looking at how TMRCA changes
+- Richard Durbin: in my opinion, lots of metrics for distances between trees, but not clear if they're good for what we want to do. Olivier Gascuel (Nature 2018, 556(7702):452-456, "Renewing Felsenstein's phylogenetic bootstrap in the era of big data") gave a talk on this topic. They have a measure of transfer distances
+    + Yan: sounds like an SPR?
+    + Richard: It's not an SPR
+    + Adam Siepel: Robinson-Foulds not good in this setting, some of the internal nodes are not good.
+- Yan: hard to determine what to do with polytomies. Think that the KC distance is too kind on polytomies.
+- Guillaume Achaz: whole field of research, distance between trees (phylogenetics). There's a space with all the trees, calculate how far we ahve to travel in that space from one tree to another.
+- Simon Myers: we tried masking 10% of data, mapping onto the trees. Methods that were better at it were better methods. It would have the benefit of matching what happens in real data. What's the probability that the SNP could be placed on the tree.
+- Adam: count the number of mutations required on the current trees to explain the data, and count the number of recombinations
+
+Discussion questions (not really covered)
+- Are tree distance measures the right approach? If so, which ones?
+- How should we treat polytomies?
+- How should we weight topology vs. branch lengths?
+- Tree distance metrics essentially treat all trees as independent -- e.g. relate has no real maintenance of identity of ndodes between trees. Should this be penalised?
+- How to scale this up?
 
 ## <a name="ralph"></a> Peter Ralph, Benchmark simulations for ARG inference (45 mins)
 [[top](#top)]
